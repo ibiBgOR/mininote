@@ -2,8 +2,9 @@
   <div class="notebook-list-element" v-if="notebooks.length !== 0">
     <span class="header">Existing notebooks:</span>
     <b-list-group class="list">
-      <b-list-group-item :key="notebook" v-for="notebook in sortedNotebooks">
-        {{ notebook }}
+      <b-list-group-item :key="notebook" v-for="notebook in sortedNotebooks" class="d-flex justify-content-between align-items-center">
+        {{ notebook.name }}
+        <b-badge variant="primary" pill>{{ notebook.notesCount }}</b-badge>
       </b-list-group-item>
     </b-list-group>
   </div>
@@ -17,7 +18,7 @@
     props: ['notebooks'],
     computed: {
       sortedNotebooks: function() {
-        return this.notebooks.sort()
+        return this.notebooks.sort((a,b) => (a.name > b.name) ? 1 : ((b.name > a.name) ? -1 : 0))
       },
     },
     mounted() {
