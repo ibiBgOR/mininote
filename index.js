@@ -28,8 +28,20 @@ app.head('/api/notebook/:id', (req, res) => {
     res.status(200).end()
 })
 
+function loadNotebookList() {
+    return notebooks.find().map(notebookData => ({name: notebookData.id, notesCount: notebookData.notes.length }))
+}
+
 app.get('/api/notebook', (req, res) => {
-    res.status(201).send(notebooks.find().map(notebookData => ({name: notebookData.id, notesCount: notebookData.notes.length })))
+    res.status(201).send(loadNotebookList())
+})
+
+app.del('/api/notebook/:id', (req, res) => {
+    let notebook = notebooks.findOne({ id: req.params.id })
+    if (!notebook) return res.status(404).end()
+    if (req.get('Authorization') !== `Basic ${notebook.password}`) return res.status(401).end()
+    notebooks.remove(notebook)
+    res.status(200).send(loadNotebookList())
 })
 
 app.post('/api/notebook', (req, res) => {
