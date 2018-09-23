@@ -8,6 +8,18 @@ export default {
                 return res.json()
             })
     },
+    delete: function(notebookId, passwordHash) {
+        let headers = new Headers()
+        headers.append('Authorization', 'Basic ' + passwordHash)
+        let req = new Request(apiBaseUrl + 'notebook/' + notebookId, { method: 'DELETE', headers: headers })
+        return fetch(req)
+            .then(res => {
+                if (res.status === 200) return res.json()
+                else if (res.status === 404) throw Error("No notebook found to delete")
+                else if (res.status === 401) throw Error("Password incorrect")
+                else throw Error("Something went wrong. Sorry!")
+            })
+    },
     exists: function(notebookId) {
         let req = new Request(apiBaseUrl + 'notebook/' + notebookId, { method: 'HEAD' })
         return fetch(req)

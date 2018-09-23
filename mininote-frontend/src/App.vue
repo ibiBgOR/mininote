@@ -20,7 +20,7 @@
         <span v-if="notebooks.length === 0" class="placeholder">Please create a notebook.</span>
         <span v-else class="placeholder">Please open an existing notebook or create a new one.</span>
         <div class="notebook-list">
-          <notebook-list :notebooks="notebooks" @notebooksLoaded="onNotebooksLoaded"></notebook-list>
+          <notebook-list :notebooks="notebooks" @alert="showAlert" @notebooksLoaded="onNotebooksLoaded"></notebook-list>
         </div>
       </div>
     </div>
