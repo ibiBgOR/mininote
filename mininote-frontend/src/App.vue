@@ -13,7 +13,7 @@
           <notes-picker :notes="notes" @noteSelected="onNoteSelected" @alert="showAlert" @addNote="addNote" @deleteNote="deleteNote"></notes-picker>
         </div>
         <div class="col-10" v-if="selectedNote">
-          <notes-editor :note="selectedNote" @alert="showAlert"></notes-editor>
+          <notes-editor :showEditor="showEditor" :note="selectedNote" @alert="showAlert"></notes-editor>
         </div>
       </div>
       <div v-if="!notes">
@@ -38,7 +38,8 @@ export default {
   name: 'app',
   data() {
     return {
-      notes: null,
+			showEditor: true,
+			notes: null,
       notesInitial: null,
       selectedNoteId: 0,
       alert: null
@@ -62,6 +63,9 @@ export default {
     NotesEditor,
     NotesPicker,
     ControlBar
+  },
+  created(){
+    window.addEventListener("beforeunload", this.didIntentToLeave);
   },
   methods: {
     onNoteSelected: function(noteId) {
@@ -89,6 +93,14 @@ export default {
       setTimeout(function() {
         vm.alert = null
       }, 3000)
+    },
+    didIntentToLeave: function(event){
+      if(this.hasChanges){
+        // Cancel the event as stated by the standard.
+        event.preventDefault();
+        // Chrome requires returnValue to be set.
+        event.returnValue = '';
+      }
     }
   }
 }
